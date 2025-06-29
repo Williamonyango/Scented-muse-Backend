@@ -25,15 +25,17 @@ const storeRefreshToken = async (userId, refreshToken) => {
 };
 
 const setCookies = (res, accessToken, refreshToken) => {
+  const isProduction = process.env.NODE_ENV === "production";
   res.cookie("accessToken", accessToken, {
     httpOnly: true, // Prevent JavaScript access to the cookie, Helps mitigate XSS attacks
-    secure: process.env.NODE_ENV === "production", // Use secure cookies in production
-    sameSite: "Strict", //prevent CSRF attacks
+    secure: isProduction, // Use secure cookies in production
+    sameSite: isProduction ? "None" : "Lax", //prevent CSRF attacks
     maxAge: 15 * 60 * 1000, // 15 minutes
   });
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure: isProduction, // Use secure cookies in production
+    sameSite: isProduction ? "None" : "Lax", //prevent CSRF attacks
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
   });
 };
