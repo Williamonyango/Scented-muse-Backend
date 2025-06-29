@@ -19,11 +19,21 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+const allowedOrigins = [
+  "http://localhost:5173", // your Vite frontend
+  "https://your-production-frontend.com",
+];
 // ✅ Enable CORS
 app.use(
   cors({
-    origin: true,
-    credentials: true, // allow cookies to be sent
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
   })
 );
 
