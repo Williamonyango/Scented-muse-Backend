@@ -20,7 +20,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 const allowedOrigins = [
-  "http://localhost:5173", // your Vite frontend
+  "http://localhost:5173",
   "https://your-production-frontend.com",
 ];
 // ✅ Enable CORS
@@ -38,7 +38,7 @@ app.use(
 );
 
 // Middleware
-app.use(express.json());
+app.use(express.json({ limit: "50mb" })); // ✅ Increase JSON body limit
 app.use(cookieParser());
 
 // Routes

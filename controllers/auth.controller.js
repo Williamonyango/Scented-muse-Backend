@@ -27,16 +27,16 @@ const storeRefreshToken = async (userId, refreshToken) => {
 const setCookies = (res, accessToken, refreshToken) => {
   const isProduction = process.env.NODE_ENV === "production";
   res.cookie("accessToken", accessToken, {
-    httpOnly: true, // Prevent JavaScript access to the cookie, Helps mitigate XSS attacks
-    secure: isProduction, // Use secure cookies in production
-    sameSite: isProduction ? "None" : "Lax", //prevent CSRF attacks
-    maxAge: 15 * 60 * 1000, // 15 minutes
+    httpOnly: true,
+    secure: isProduction,
+    sameSite: isProduction ? "None" : "Lax",
+    maxAge: 15 * 60 * 1000,
   });
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
-    secure: isProduction, // Use secure cookies in production
-    sameSite: isProduction ? "None" : "Lax", //prevent CSRF attacks
-    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    secure: isProduction,
+    sameSite: isProduction ? "None" : "Lax",
+    maxAge: 7 * 24 * 60 * 60 * 1000,
   });
 };
 
@@ -44,7 +44,7 @@ export const signup = async (req, res) => {
   const { name, email, password } = req.body;
 
   try {
-    const userExists = await User.findOne({ email }); // Use findOne instead of find
+    const userExists = await User.findOne({ email });
     if (userExists) {
       return res.status(400).send("User already exists");
     }
