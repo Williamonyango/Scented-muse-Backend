@@ -39,28 +39,29 @@ export const getFeaturedProducts = async (req, res) => {
 };
 export const createProduct = async (req, res) => {
   try {
-    const { name, description, price, image, category, isFeatured } = req.body;
+    const { name, description, price, image, category } = req.body;
+
+    if (!name || !description || !price || !category) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
     let cloudinaryResponse;
-    if (imageUrl) {
-      // If imageUrl is provided, upload to Cloudinary
+    if (image) {
       cloudinaryResponse = await cloudinary.uploader.upload(image, {
         folder: "products",
       });
     }
 
-    if (!name || !description || !price || !category) {
-      return res.status(400).json({ message: "All fields are required" });
-    }
     const newProduct = new Product({
       name,
       description,
       price,
-      image: cloudinaryResponse ? cloudinaryResponse.secure_url : "", // Use Cloudinary URL if uploaded, otherwise use provided URL
+      image: cloudinaryResponse ? cloudinaryResponse.secure_url : "", // Use Cloudinary URL if uploaded
       category,
-      isFeatured: isFeatured || false,
-      stockQuantity: stockQuantity || 0,
     });
-    res.status(201).json(await newProduct.save());
+
+    const savedProduct = await newProduct.save();
+    res.status(201).json(savedProduct);
   } catch (error) {
     res.status(500).json({
       message: "Error creating product",
@@ -68,6 +69,7 @@ export const createProduct = async (req, res) => {
     });
   }
 };
+
 export const deleteProduct = async (req, res) => {
   try {
     const product = await Product.findByIdAndDelete(req.params.id);
