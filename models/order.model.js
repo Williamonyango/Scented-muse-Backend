@@ -31,9 +31,13 @@ const orderSchema = new mongoose.Schema(
       required: true,
       min: 0,
     },
-    stripeSessionId: {
+    transactionId: {
       type: String,
       unique: true,
+    },
+    phoneNumber: {
+      type: String,
+      required: true,
     },
   },
   { timestamps: true }

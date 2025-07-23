@@ -1,13 +1,14 @@
 import express from "express";
 import { protectRoute } from "../middleware/auth.middleware.js";
 import {
-  checkoutSuccess,
-  createCheckoutSession,
+  lipaNaMpesa,
+  lipaNaMpesaCallback,
 } from "../controllers/payment.controller.js";
+import { getAccessToken } from "../middleware/authorization.js";
 
 const router = express.Router();
 
-router.post("/create-checkout-session", protectRoute, createCheckoutSession);
-router.post("/checkout-success", protectRoute, checkoutSuccess);
+router.post("/lipa-na-mpesa", protectRoute, getAccessToken, lipaNaMpesa);
+router.post("/mpesa/callback", lipaNaMpesaCallback);
 
 export default router;
